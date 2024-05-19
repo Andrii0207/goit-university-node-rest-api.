@@ -3,6 +3,7 @@ import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import authServices from "../services/authServices.js"
 import compareHash from "../helpers/compareHash.js"
+import { createToken } from "../helpers/jwt.js";
 
 
 const singup = async (req, res) => {
@@ -32,13 +33,12 @@ const singin = async (req, res) => {
     if (!comparePassword) {
         throw HttpError(401, "Email or password is wrong")
     }
-    const token = "1234.4567.8910"
+    const { _id: id } = user;
+    const payload = { id, };
+    const token = createToken(payload);
 
     res.json({ token })
 }
-
-
-
 
 export default {
     singup: ctrlWrapper(singup),
