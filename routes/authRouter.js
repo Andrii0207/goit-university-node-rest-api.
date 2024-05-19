@@ -6,7 +6,6 @@ import { isValidId } from "../middlewares/isValidId.js";
 
 import authControllers from "../controllers/authControllers.js"
 
-
 const authRouter = express.Router();
 
 authRouter.post("/register", isEmptyBody, authControllers.singup);
