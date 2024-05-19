@@ -1,11 +1,11 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import path from "path"
 import mongoose from "mongoose";
+import "dotenv/config";
+
+import authRouter from "./routes/authRouter.js";
 import contactsRouter from "./routes/contactsRouter.js";
-import { error } from "console";
-import "dotenv/config"
 
 const { DB_HOST, PORT = 3000 } = process.env
 
@@ -15,6 +15,7 @@ app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 
+app.use("/users/register", authRouter);
 app.use("/api/contacts", contactsRouter);
 
 app.use((_, res) => {
