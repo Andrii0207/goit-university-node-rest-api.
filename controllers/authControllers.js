@@ -4,6 +4,7 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import authServices from "../services/authServices.js"
 import compareHash from "../helpers/compareHash.js"
 import { createToken } from "../helpers/jwt.js";
+import { authSingUpSchema } from "../schemas/authSchemas.js"
 
 
 const singup = async (req, res) => {
@@ -13,7 +14,10 @@ const singup = async (req, res) => {
     if (user) {
         throw HttpError(409, "Email in use")
     }
-
+    const { error } = authSingUpSchema.validate(req.body)
+    if (error) {
+        throw HttpError(400, error.message)
+    }
     const newUser = await authServices.saveUser(req.body);
 
     res.status(201).json({
@@ -25,6 +29,7 @@ const singup = async (req, res) => {
 const singin = async (req, res) => {
     const { email, password } = req.body;
     const user = await authServices.findUser({ email });
+
 
     if (!user) {
         throw HttpError(401, "Email or password is wrong")

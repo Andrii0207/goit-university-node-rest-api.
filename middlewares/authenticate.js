@@ -9,18 +9,22 @@ const authenticate = async (req, res, next) => {
     if (!authorization) {
         return next(HttpError(401, "Not authorized"))
     }
+
     const [bearer, token] = authorization.split(" ")
     if (bearer !== "Bearer") {
         return next(HttpError(401, "Not authorized"))
     }
+
     try {
         const { id } = verifyToken(token);
-        const user = authServices.findUser({ _id: id });
+        const user = await authServices.findUser({ _id: id });
         if (!user) {
             return next(HttpError(401, "user not found"))
         }
+        req.user = user;
         next();
-    } catch (error) {
+    }
+    catch (error) {
         next(HttpError(401, error.message))
     }
 }

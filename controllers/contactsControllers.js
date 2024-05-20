@@ -1,5 +1,7 @@
 import contactsService from "../services/contactsServices.js";
 
+import { createContactSchema, updateContactSchema, updateStatusSchema } from "../schemas/contactsSchemas.js"
+
 import HttpError from "../helpers/HttpError.js"
 
 import ctrlWrapper from "../decorators/ctrlWrapper.js"
@@ -33,7 +35,8 @@ const createContact = async (req, res, next) => {
     if (error) {
         throw HttpError(400, error.message)
     }
-    const responce = await contactsService.addContact(req.body)
+    const { _id: owner } = req.user;
+    const responce = await contactsService.addContact({ ...req.body, owner })
     res.status(201).json(responce)
 };
 
