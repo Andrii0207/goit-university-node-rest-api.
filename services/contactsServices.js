@@ -14,7 +14,7 @@ const addContact = data => Contact.create(data);
 
 const updateContact = (id, body) => Contact.findByIdAndUpdate(id, body)
 
-const updateStatusContact = (id, body) => Contact.findByIdAndUpdate(id, body, { new: true })
+const updateStatusContact = (id, body) => Contact.findByIdAndUpdate(id, body)
 
 export default {
     listContacts,
