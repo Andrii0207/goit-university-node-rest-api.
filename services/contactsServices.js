@@ -6,19 +6,19 @@ const listContacts = (search = {}) => {
     return Contact.find(filter, fields)
 };
 
-const getContactById = _id => Contact.findById(_id)
+const getContact = filter => Contact.findOne(filter)
 
-const removeContact = id => Contact.findByIdAndDelete(id)
+const removeContact = filter => Contact.findOneAndDelete(filter)
 
 const addContact = data => Contact.create(data);
 
-const updateContact = (id, body) => Contact.findByIdAndUpdate(id, body)
+const updateContact = (filter, body) => Contact.findOneAndUpdate(filter, body)
 
-const updateStatusContact = (id, body) => Contact.findByIdAndUpdate(id, body, { new: true })
+const updateStatusContact = (filter, body) => Contact.findByIdAndUpdate(filter, body, { new: true })
 
 export default {
     listContacts,
-    getContactById,
+    getContact,
     removeContact,
     addContact,
     updateContact,
