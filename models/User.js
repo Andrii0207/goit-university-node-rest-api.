@@ -4,6 +4,7 @@ import { handleSaveError, setUpdateSettings } from "../models/hooks.js";
 
 import { typeOfSubscription, emailRegexp } from "../constants/user-constants.js";
 
+
 const userSchema = new Schema({
     password: {
         type: String,

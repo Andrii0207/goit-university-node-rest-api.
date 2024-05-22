@@ -2,6 +2,7 @@ import bcrypt from "bcrypt"
 
 import User from "../models/User.js";
 
+
 const findUser = filter => User.findOne(filter);
 
 const saveUser = async data => {

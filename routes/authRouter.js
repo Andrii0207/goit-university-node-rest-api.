@@ -2,20 +2,25 @@ import express from "express"
 
 import { isEmptyBody } from "../middlewares/isEmptyBody.js";
 
-import { isValidId } from "../middlewares/isValidId.js";
+import validateBody from "../helpers/validateBody.js";
+
+import { authSingUpSchema, authSingInSchema, updateSubscriptionSchema } from "../schemas/authSchemas.js";
 
 import authControllers from "../controllers/authControllers.js"
 
 import authenticate from "../middlewares/authenticate.js"
 
+
 const authRouter = express.Router();
 
-authRouter.post("/register", isEmptyBody, authControllers.singup);
+authRouter.post("/register", isEmptyBody, validateBody(authSingUpSchema), authControllers.singup);
 
-authRouter.post("/login", isEmptyBody, authControllers.singin);
+authRouter.post("/login", isEmptyBody, validateBody(authSingInSchema), authControllers.singin);
 
 authRouter.get("/current", authenticate, authControllers.getCurrent)
 
 authRouter.post("/logout", authenticate, authControllers.logout)
+
+authRouter.patch("/", authenticate, validateBody(updateSubscriptionSchema), authControllers.updateSubscription)
 
 export default authRouter;

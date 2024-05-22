@@ -3,22 +3,15 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import authServices from "../services/authServices.js"
 import compareHash from "../helpers/compareHash.js"
 import { createToken } from "../helpers/jwt.js";
-import { authSingUpSchema } from "../schemas/authSchemas.js"
-
 
 const singup = async (req, res) => {
-    const { email, subscription } = req.body;
+    const { email } = req.body;
 
     const user = await authServices.findUser({ email })
     if (user) {
         throw HttpError(409, "Email in use")
     }
-    const { error } = authSingUpSchema.validate(req.body)
-    if (error) {
-        throw HttpError(400, error.message)
-    }
     const newUser = await authServices.saveUser(req.body);
-
     res.status(201).json({
         user: {
             email: newUser.email,
@@ -46,20 +39,34 @@ const singin = async (req, res) => {
     res.json({ token, user: { email, subsription: user.subscription } })
 }
 
-const getCurrent = (req, res) => {
-    const { email } = req.user;
-    req.json({ email })
-}
-
 const logout = async (req, res) => {
     const { _id } = req.user;
     await authServices.updateUser({ _id }, { token: "" })
     res.json({ message: "Logout success" })
 }
 
+const getCurrent = (req, res) => {
+    const { email, subscription } = req.user;
+    res.json({ email, subscription })
+}
+
+const updateSubscription = async (req, res) => {
+    const { id } = req.user;
+    const { subscription } = req.body;
+    const user = await authServices.findUser({ _id: id })
+
+    if (user.subscription === subscription) {
+        throw HttpError(409, `You have already subscription: ${subscription}`)
+    }
+    const updatedUser = await authServices.updateUser({ _id: id }, req.body)
+
+    res.json({ email: updatedUser.email, subscription: updatedUser.subscription })
+}
+
 export default {
     singup: ctrlWrapper(singup),
     singin: ctrlWrapper(singin),
     getCurrent: ctrlWrapper(getCurrent),
-    logout: ctrlWrapper(logout)
+    logout: ctrlWrapper(logout),
+    updateSubscription: ctrlWrapper(updateSubscription)
 }

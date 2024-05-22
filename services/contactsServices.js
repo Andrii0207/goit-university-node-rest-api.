@@ -18,6 +18,7 @@ const updateContact = (filter, body) => Contact.findOneAndUpdate(filter, body)
 
 const updateStatusContact = (filter, body) => Contact.findByIdAndUpdate(filter, body)
 
+
 export default {
     listContacts,
     countContacts,

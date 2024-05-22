@@ -13,3 +13,7 @@ export const authSingInSchema = Joi.object({
     email: Joi.string().required(),
     password: Joi.string().min(8).required()
 })
+
+export const updateSubscriptionSchema = Joi.object({
+    subscription: Joi.string().valid(...typeOfSubscription).required()
+})
