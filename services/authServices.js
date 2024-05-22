@@ -9,9 +9,11 @@ const saveUser = async data => {
     return User.create({ ...data, password: hashPassword })
 };
 
+const updateUser = (filter, data) => User.findByIdAndUpdate(filter, data);
 
 
 export default {
     findUser,
-    saveUser
+    saveUser,
+    updateUser
 }

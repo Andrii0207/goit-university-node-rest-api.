@@ -10,14 +10,21 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js"
 const getAllContacts = async (req, res, next) => {
     const { _id: owner } = req.user;
     const filter = { owner };
-    const contactList = await contactsService.listContacts({ filter });
-    res.json(contactList);
+    const fields = "";
+    const { page = 1, limit = 20 } = req.query;
+    const skip = (page - 1) * limit;
+    const settings = { skip, limit };
+    const result = await contactsService.listContacts({ filter, fields, settings });
+    const total = await contactsService.countContacts(filter);
+    res.json({
+        total,
+        result
+    });
 };
 
 const getOneContact = async (req, res, next) => {
     const { id: _id } = req.params;
     const { _id: owner } = req.user;
-    console.log("getOneCOntact >>", req.user)
     const contact = await contactsService.getContact({ _id, owner });
     if (!contact) {
         throw HttpError(404, "Not found");
@@ -65,7 +72,6 @@ const updateStatus = async (req, res, next) => {
     if (error) {
         throw HttpError(404, error.message);
     }
-    console.log("updateStatus >>", req.user)
     const { id: _id } = req.params;
     const { _id: owner } = req.user;
     const responce = await contactsService.updateStatusContact({ _id, owner }, req.body);
