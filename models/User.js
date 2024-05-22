@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 import { handleSaveError, setUpdateSettings } from "../models/hooks.js";
 
-import { subsription, emailRegexp } from "../constants/user-constants.js";
+import { typeOfSubscription, emailRegexp } from "../constants/user-constants.js";
 
 const userSchema = new Schema({
     password: {
@@ -17,12 +17,8 @@ const userSchema = new Schema({
     },
     subscription: {
         type: String,
-        enum: subsription,
+        enum: typeOfSubscription,
         default: "starter"
-    },
-    owner: {
-        type: Schema.Types.ObjectId,
-        ref: 'user',
     },
     token: {
         type: String,

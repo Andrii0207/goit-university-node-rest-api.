@@ -1,14 +1,15 @@
 import Joi from "joi";
 
-import { emailRegexp } from "../constants/user-constants.js"
+import { emailRegexp, typeOfSubscription } from "../constants/user-constants.js"
 
 export const authSingUpSchema = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().pattern(emailRegexp).required(),
-    password: Joi.string().min(6).required()
+    password: Joi.string().min(8).required(),
+    subscription: Joi.string().valid(...typeOfSubscription)
 });
 
 export const authSingInSchema = Joi.object({
     email: Joi.string().required(),
-    password: Joi.string().min(6).required()
+    password: Joi.string().min(8).required()
 })

@@ -7,7 +7,7 @@ import { authSingUpSchema } from "../schemas/authSchemas.js"
 
 
 const singup = async (req, res) => {
-    const { email } = req.body;
+    const { email, subscription } = req.body;
 
     const user = await authServices.findUser({ email })
     if (user) {
@@ -20,13 +20,15 @@ const singup = async (req, res) => {
     const newUser = await authServices.saveUser(req.body);
 
     res.status(201).json({
-        email: newUser.email,
-        subscription: newUser.subscription
+        user: {
+            email: newUser.email,
+            subscription: newUser.subscription
+        }
     })
 }
 
 const singin = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, subsription } = req.body;
     const user = await authServices.findUser({ email });
 
     if (!user) {
@@ -41,7 +43,7 @@ const singin = async (req, res) => {
     const token = createToken(payload);
     await authServices.updateUser({ _id: id }, { token })
 
-    res.json({ token })
+    res.json({ token, user: { email, subsription: user.subscription } })
 }
 
 const getCurrent = (req, res) => {
@@ -49,15 +51,15 @@ const getCurrent = (req, res) => {
     req.json({ email })
 }
 
-const singout = async (req, res) => {
+const logout = async (req, res) => {
     const { _id } = req.user;
     await authServices.updateUser({ _id }, { token: "" })
-    res.json({ message: "Singout success" })
+    res.json({ message: "Logout success" })
 }
 
 export default {
     singup: ctrlWrapper(singup),
     singin: ctrlWrapper(singin),
     getCurrent: ctrlWrapper(getCurrent),
-    singout: ctrlWrapper(singout)
+    logout: ctrlWrapper(logout)
 }
