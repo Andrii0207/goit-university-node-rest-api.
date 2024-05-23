@@ -21,7 +21,7 @@ const singup = async (req, res) => {
 }
 
 const singin = async (req, res) => {
-    const { email, password, subsription } = req.body;
+    const { email, password } = req.body;
     const user = await authServices.findUser({ email });
 
     if (!user) {
@@ -42,7 +42,7 @@ const singin = async (req, res) => {
 const logout = async (req, res) => {
     const { _id } = req.user;
     await authServices.updateUser({ _id }, { token: "" })
-    res.json({ message: "Logout success" })
+    res.status(204).json({})
 }
 
 const getCurrent = (req, res) => {

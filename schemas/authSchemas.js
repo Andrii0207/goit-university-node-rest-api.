@@ -3,7 +3,6 @@ import Joi from "joi";
 import { emailRegexp, typeOfSubscription } from "../constants/user-constants.js"
 
 export const authSingUpSchema = Joi.object({
-    name: Joi.string().required(),
     email: Joi.string().pattern(emailRegexp).required(),
     password: Joi.string().min(8).required(),
     subscription: Joi.string().valid(...typeOfSubscription)

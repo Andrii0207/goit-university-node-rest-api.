@@ -16,7 +16,7 @@ const addContact = data => Contact.create(data);
 
 const updateContact = (filter, body) => Contact.findOneAndUpdate(filter, body)
 
-const updateStatusContact = (filter, body) => Contact.findByIdAndUpdate(filter, body)
+const updateStatusContact = (filter, body) => Contact.findOneAndUpdate(filter, body)
 
 
 export default {
