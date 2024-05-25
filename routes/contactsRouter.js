@@ -12,6 +12,8 @@ import { createContactSchema, updateContactSchema, updateStatusSchema } from "..
 
 import authenticate from "../middlewares/authenticate.js"
 
+import upload from "../middlewares/upload.js";
+
 
 const contactsRouter = express.Router();
 
@@ -23,7 +25,7 @@ contactsRouter.get("/:id", isValidId, contactControllers.getOneContact);
 
 contactsRouter.delete("/:id", isValidId, contactControllers.deleteContact);
 
-contactsRouter.post("/", validateBody(createContactSchema), contactControllers.createContact);
+contactsRouter.post("/", upload.single("poster"), validateBody(createContactSchema), contactControllers.createContact);
 
 contactsRouter.put("/:id", isValidId, isEmptyBody, validateBody(updateContactSchema), contactControllers.updateContact);
 
