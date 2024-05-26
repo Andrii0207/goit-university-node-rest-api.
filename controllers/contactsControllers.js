@@ -8,7 +8,7 @@ import fs from "fs/promises"
 import path from "path";
 
 
-const avatarPath = path.resolve("upload", "avatars");
+const avatarPath = path.resolve("public", "avatars");
 
 const getAllContacts = async (req, res, next) => {
     const { _id: owner } = req.user;
@@ -48,10 +48,12 @@ const deleteContact = async (req, res, next) => {
 const createContact = async (req, res, next) => {
     const { _id: owner } = req.user;
     const { path: oldPath, filename } = req.file;
-    const newPath = path.join(avatarPath, filename)
+
+    const newPath = path.join(avatarPath, filename);
 
     await fs.rename(oldPath, newPath);
-    const avatarURL = path.join("upload", "avatars", filename);
+    const avatarURL = path.join("public", "avatars", filename);
+
     const responce = await contactsService.addContact({ ...req.body, avatarURL, owner })
     res.status(201).json(responce)
 };

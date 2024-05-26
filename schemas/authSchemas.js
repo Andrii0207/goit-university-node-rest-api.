@@ -16,3 +16,4 @@ export const authSingInSchema = Joi.object({
 export const updateSubscriptionSchema = Joi.object({
     subscription: Joi.string().valid(...typeOfSubscription).required()
 })
+

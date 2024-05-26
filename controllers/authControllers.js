@@ -3,15 +3,19 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import authServices from "../services/authServices.js"
 import compareHash from "../helpers/compareHash.js"
 import { createToken } from "../helpers/jwt.js";
+import gravatar from "gravatar";
+
 
 const singup = async (req, res) => {
     const { email } = req.body;
-
     const user = await authServices.findUser({ email })
     if (user) {
         throw HttpError(409, "Email in use")
     }
-    const newUser = await authServices.saveUser(req.body);
+    const avatarURL = gravatar.url(email, { s: '250' })
+
+    const newUser = await authServices.saveUser({ ...req.body, avatarURL });
+
     res.status(201).json({
         user: {
             email: newUser.email,
@@ -50,23 +54,9 @@ const getCurrent = (req, res) => {
     res.json({ email, subscription })
 }
 
-const updateSubscription = async (req, res) => {
-    const { id } = req.user;
-    const { subscription } = req.body;
-    const user = await authServices.findUser({ _id: id })
-
-    if (user.subscription === subscription) {
-        throw HttpError(409, `You have already subscription: ${subscription}`)
-    }
-    const updatedUser = await authServices.updateUser({ _id: id }, req.body)
-
-    res.json({ email: updatedUser.email, subscription: updatedUser.subscription })
-}
-
 export default {
     singup: ctrlWrapper(singup),
     singin: ctrlWrapper(singin),
     getCurrent: ctrlWrapper(getCurrent),
-    logout: ctrlWrapper(logout),
-    updateSubscription: ctrlWrapper(updateSubscription)
+    logout: ctrlWrapper(logout)
 }
