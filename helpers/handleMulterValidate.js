@@ -5,7 +5,7 @@ function handleMulterValidate(upload) {
     return (req, res, next) => {
         upload(req, res, error => {
             if (error instanceof multer.MulterError) {
-                next(HttpError(400, error.message));
+                next(HttpError(400, error));
             } else if (error) {
                 next(error);
             }
