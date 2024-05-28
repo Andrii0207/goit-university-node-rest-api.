@@ -1,11 +1,11 @@
 import multer from "multer";
 import HttpError from "../helpers/HttpError.js";
 
-function handleMulterValidate(upload) {
+function handleMulterError(upload) {
     return (req, res, next) => {
         upload(req, res, error => {
             if (error instanceof multer.MulterError) {
-                next(HttpError(400, error));
+                next(HttpError(400, error.message));
             } else if (error) {
                 next(error);
             }
@@ -14,4 +14,4 @@ function handleMulterValidate(upload) {
     };
 }
 
-export default handleMulterValidate;
+export default handleMulterError;

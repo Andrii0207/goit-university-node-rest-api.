@@ -23,6 +23,9 @@ const updateSubscription = async (req, res) => {
 }
 
 const updateAvatar = async (req, res) => {
+    if (!req.file) {
+        throw HttpError(400, "Please add avatar for update")
+    }
     const { id } = req.user;
     const { filename, path: oldPath } = req.file;
     const newPath = path.join(avatarPath, filename);
