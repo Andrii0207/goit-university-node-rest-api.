@@ -23,8 +23,8 @@ const updateSubscription = async (req, res) => {
 }
 
 const updateAvatar = async (req, res) => {
-    const { filename, path: oldPath } = req.file;
     const { id } = req.user;
+    const { filename, path: oldPath } = req.file;
     const newPath = path.join(avatarPath, filename);
 
     await resizeAvatar(oldPath);
