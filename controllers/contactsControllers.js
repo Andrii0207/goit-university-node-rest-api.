@@ -1,7 +1,5 @@
 import contactsService from "../services/contactsServices.js";
-
 import HttpError from "../helpers/HttpError.js"
-
 import ctrlWrapper from "../decorators/ctrlWrapper.js"
 
 import fs from "fs/promises"
@@ -47,6 +45,9 @@ const deleteContact = async (req, res, next) => {
 
 const createContact = async (req, res, next) => {
     const { _id: owner } = req.user;
+    if (!req.file) {
+        throw HttpError(400, "poster is required for create new contact")
+    }
     const { path: oldPath, filename } = req.file;
 
     const newPath = path.join(avatarPath, filename);

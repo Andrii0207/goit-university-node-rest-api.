@@ -4,17 +4,29 @@ import authServices from "../services/authServices.js"
 import compareHash from "../helpers/compareHash.js"
 import { createToken } from "../helpers/jwt.js";
 import gravatar from "gravatar";
+import { nanoid } from "nanoid"
+import sendEmail from "../helpers/sendEmail.js";
 
 
 const singup = async (req, res) => {
     const { email } = req.body;
-    const user = await authServices.findUser({ email })
+    const user = await authServices.findUser({ email });
     if (user) {
         throw HttpError(409, "Email in use")
     }
-    const avatarURL = gravatar.url(email, { s: '250' })
+    const avatarURL = gravatar.url(email, { s: '250' });
+    const verificationToken = nanoid();
 
-    const newUser = await authServices.saveUser({ ...req.body, avatarURL });
+    const newUser = await authServices.saveUser({ ...req.body, avatarURL, verificationToken });
+
+    const verifyEmail = {
+        to: email,
+        subject: "Verify email",
+        html: `<a target="_blank" href="http://localhost:3000/api/auth/verify/${verificationToken}">Click verify email</a>`,
+    };
+
+    await sendEmail(verifyEmail);
+
 
     res.status(201).json({
         user: {
